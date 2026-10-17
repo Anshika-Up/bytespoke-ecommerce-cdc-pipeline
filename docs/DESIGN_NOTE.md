@@ -5,7 +5,17 @@
 Process inserts and partial updates for customer/order entities incrementally, preserve a current-state view, make reruns safe, and summarize the evidence from each batch.
 
 ## Architecture
-`changes.json → validation → raw_events (immutable event ledger) → customers/orders (current state) → change_summaries`
+```mermaid
+flowchart LR
+    A[changes.json] --> B[Validation]
+    B --> C[(raw_events ledger)]
+    B --> D[Incremental apply]
+    D --> E[(customers)]
+    D --> F[(orders)]
+    C --> G[Batch evidence]
+    G --> H[SummaryProvider]
+    H --> I[(change_summaries)]
+```
 
 ## Key decisions
 - **SQLite:** zero-service setup and portable local database; suitable for this assessment-sized dataset.

@@ -56,7 +56,17 @@ The AI component lives in `src/ai_summary.py`. `SummaryProvider` is the interfac
 The model receives only the batch's validated event evidence. It is instructed not to invent metrics. No API keys are needed for local Ollama.
 
 ## Architecture
-`JSON change events → validation → raw_events ledger → current-state customers/orders → change_summaries`
+```mermaid
+flowchart LR
+    A[JSON CDC events] --> B[Validate event]
+    B --> C[(raw_events ledger)]
+    B --> D[Apply INSERT / partial UPDATE]
+    D --> E[(customers current state)]
+    D --> F[(orders current state)]
+    C --> G[Evidence for batch]
+    G --> H[SummaryProvider]
+    H --> I[(change_summaries)]
+```
 
 See [`sql/schema.sql`](sql/schema.sql) and [`docs/DESIGN_NOTE.md`](docs/DESIGN_NOTE.md).
 
