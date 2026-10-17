@@ -1,13 +1,13 @@
 Verification performed before packaging
 ========================================
 Command: python -m unittest discover -s tests -v
-Result: 4 tests passed.
+Result: 5 tests passed.
 
 Tests:
 - test_insert_and_update_preserve_current_state: PASS
 - test_duplicate_event_id_is_idempotent: PASS
 - test_edge_case_rejects_update_for_unknown_customer: PASS
-- test_edge_case_rejects_negative_order_amount: PASS
+- test_edge_case_rejects_negative_order_amount: PASS\n- test_ai_provider_failure_uses_safe_fallback: PASS
 
 Manual smoke test:
 - First run processed 6 events and current state showed C001 city=Varanasi and O100 status=SHIPPED.

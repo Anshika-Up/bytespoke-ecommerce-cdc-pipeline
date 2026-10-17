@@ -9,6 +9,11 @@ def event(event_id, entity, operation, entity_id, data, time="2026-10-17T12:00:0
     return {"event_id":event_id,"entity":entity,"operation":operation,"entity_id":entity_id,
             "event_time":time,"data":data}
 
+class BrokenSummarizer:
+    name = "broken-test-provider"
+    def summarize(self, changes):
+        raise RuntimeError("simulated model outage")
+
 class CDCPipelineTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -49,6 +54,12 @@ class CDCPipelineTests(unittest.TestCase):
         with self.assertRaises(ValidationError):
             process_events(self.conn, [e], self.summarizer)
         self.assertEqual(self.conn.execute("SELECT COUNT(*) FROM raw_events").fetchone()[0], 0)
+
+    def test_ai_provider_failure_uses_safe_fallback(self):
+        e = event("e1","customer","INSERT","C1",{"name":"A","email":"a@example.test","city":"Gorakhpur"})
+        result = process_events(self.conn, [e], BrokenSummarizer())
+        self.assertIn("AI provider unavailable", result["provider"])
+        self.assertIn("Processed 1 new change event", result["summary"])
 
     def test_edge_case_rejects_negative_order_amount(self):
         customer = event("e1","customer","INSERT","C1",{"name":"A","email":"a@example.test","city":"Gorakhpur"})

@@ -6,7 +6,7 @@ import sqlite3
 from pathlib import Path
 from datetime import datetime, timezone
 from typing import Iterable
-from src.ai_summary import get_summarizer, SummaryProvider
+from src.ai_summary import get_summarizer, RuleBasedSummarizer, SummaryProvider
 
 ROOT = Path(__file__).resolve().parents[1]
 DB_PATH = ROOT / "cdc_pipeline.db"
@@ -130,8 +130,15 @@ def process_events(conn: sqlite3.Connection, events: Iterable[dict],
         except Exception:
             conn.rollback()
             raise
-    summary_text = (summarizer or get_summarizer()).summarize(change_evidence)
-    provider = (summarizer or get_summarizer()).name
+    provider_instance = summarizer or get_summarizer()
+    try:
+        summary_text = provider_instance.summarize(change_evidence)
+        provider = provider_instance.name
+    except Exception:
+        # Keep the data pipeline usable even when the optional local model is unavailable.
+        fallback = RuleBasedSummarizer()
+        summary_text = fallback.summarize(change_evidence)
+        provider = fallback.name + " (AI provider unavailable)"
     conn.execute("""INSERT INTO change_summaries(event_count,summary_text,provider) VALUES(?,?,?)""",
                  (processed, summary_text, provider))
     conn.commit()
