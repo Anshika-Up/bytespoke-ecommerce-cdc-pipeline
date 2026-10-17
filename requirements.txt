@@ -1,0 +1,2 @@
+# Core pipeline uses only Python standard library (Python 3.10+).
+# Optional: install Ollama separately and pull a local model for model-backed summaries.

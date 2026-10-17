@@ -1,0 +1,70 @@
+[
+  {
+    "event_id": "evt-001",
+    "entity": "customer",
+    "operation": "INSERT",
+    "entity_id": "C001",
+    "event_time": "2026-10-17T09:00:00Z",
+    "data": {
+      "name": "Aarav Sharma",
+      "email": "aarav@example.test",
+      "city": "Gorakhpur"
+    }
+  },
+  {
+    "event_id": "evt-002",
+    "entity": "customer",
+    "operation": "INSERT",
+    "entity_id": "C002",
+    "event_time": "2026-10-17T09:03:00Z",
+    "data": {
+      "name": "Meera Singh",
+      "email": "meera@example.test",
+      "city": "Lucknow"
+    }
+  },
+  {
+    "event_id": "evt-003",
+    "entity": "order",
+    "operation": "INSERT",
+    "entity_id": "O100",
+    "event_time": "2026-10-17T09:05:00Z",
+    "data": {
+      "customer_id": "C001",
+      "amount": 1299.0,
+      "status": "PLACED"
+    }
+  },
+  {
+    "event_id": "evt-004",
+    "entity": "customer",
+    "operation": "UPDATE",
+    "entity_id": "C001",
+    "event_time": "2026-10-17T10:00:00Z",
+    "data": {
+      "city": "Varanasi"
+    }
+  },
+  {
+    "event_id": "evt-005",
+    "entity": "order",
+    "operation": "UPDATE",
+    "entity_id": "O100",
+    "event_time": "2026-10-17T10:10:00Z",
+    "data": {
+      "status": "SHIPPED"
+    }
+  },
+  {
+    "event_id": "evt-006",
+    "entity": "order",
+    "operation": "INSERT",
+    "entity_id": "O101",
+    "event_time": "2026-10-17T10:15:00Z",
+    "data": {
+      "customer_id": "C002",
+      "amount": 599.0,
+      "status": "PLACED"
+    }
+  }
+]
